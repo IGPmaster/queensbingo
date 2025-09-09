@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+ .compliance-btn {
+     @apply border-gray-200 cursor-pointer uppercase border px-3 py-1 rounded text-sm text-gray-600;
+ }
+.cas-btn {
+    @apply uppercase py-2 flex items-center justify-center gap-4 text-xs tracking-wider text-gray-50 rounded-md cursor-pointer border border-primary font-light;
+}
+.login-btn {
+    @apply text-white uppercase font-semibold border-2 border-white bg-primary leading-none py-2 px-10 rounded flex justify-center cursor-pointer;
+}
+.reg-btn {
+    @apply text-white uppercase font-semibold border-2 border-white bg-secondary leading-none py-2 px-10 rounded flex justify-center cursor-pointer;
+}
+
+h1 {
+    @layer mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md: text-5xl lg:text-6xl dark:text-white;
+}
+
+h2 {
+    @layer text-4xl font-extrabold dark: text-white;
+}

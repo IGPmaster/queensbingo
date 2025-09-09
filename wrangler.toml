@@ -1,0 +1,6 @@
+name = "casimboo-ssr"
+account_id = "cd4628cb46169b384a110e86fa36a731"
+main = ".output/server/index.mjs"
+workers_dev = true
+[build]
+  command = "npx nuxi build && npx nitro prepare"
