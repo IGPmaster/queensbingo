@@ -50,43 +50,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue'
 
-import { msgTranslate, regLink, loginLink } from '~/composables/globalData';
-
-
-const menuIsOpen = ref(false);
-
-onMounted(() => {
-  const menuBtn = document.getElementById('menu-btn');
-  const menu = document.getElementById('menu');
-  const outsideClickListener = (event) => {
-    if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
-      menuIsOpen.value = false;
-      updateMenu();
-    }
-  };
-
-  menuBtn.addEventListener('click', () => {
-    menuIsOpen.value = !menuIsOpen.value;
-    updateMenu();
-  });
-
-  document.addEventListener('click', outsideClickListener);
-
-  onUnmounted(() => {
-    document.removeEventListener('click', outsideClickListener);
-  });
-});
+const menuIsOpen = ref(false)
 
 function updateMenu() {
-  const menu = document.getElementById('menu');
-  if (menuIsOpen.value) {
-    menu.style.transform = 'scale(1)';
-  } else {
-    menu.style.transform = 'scale(0)';
-  }
+  // your menu update logic here
 }
+
+onMounted(() => {
+  if (process.client) {
+    const menuBtn = document.getElementById("menu-btn")
+    const menu = document.getElementById("menu")
+
+    if (!menuBtn || !menu) return
+
+    const outsideClickListener = (event) => {
+      if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+        menuIsOpen.value = false
+        updateMenu()
+      }
+    }
+
+    menuBtn.addEventListener("click", () => {
+      menuIsOpen.value = !menuIsOpen.value
+      updateMenu()
+    })
+
+    document.addEventListener("click", outsideClickListener)
+
+    onUnmounted(() => {
+      document.removeEventListener("click", outsideClickListener)
+    })
+  }
+})
 </script>
 
 <style>
