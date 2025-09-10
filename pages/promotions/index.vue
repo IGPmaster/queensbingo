@@ -27,7 +27,7 @@
                             
                     <span class="text-sm/[12px] text-slate-800/75">
                                  <a 
-                                    :href="'https://casimboo.casino-pp.net/promotions?code=' + promo.code" 
+                                    :href="'https://www.queensbingo.com/promotions?code=' + promo.code" 
                                     class="text-sm/[10px] py-5 text-slate-800/60 italic leading-normal"
                                     target="_blank" 
                                     rel="noopener noreferrer">

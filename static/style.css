@@ -1,5 +1,5 @@
 /*
-Theme name: Casimboo (cas)
+Theme name: Queens Bingo (cas)
 Theme URI:
 Description: 
 Author:
@@ -50,8 +50,12 @@ Version: 1.0
   }
 }
 
+.bg-primary_bg {
+  background-color: #1e0223;
+}
+
 .section-odd {
-    background: #2B3844;
+    background: #380f3f;
 
 }
 .section-even {
@@ -332,7 +336,7 @@ blockquote{border-left:5px solid #3597fa!important;font-family:Open Sans;font-st
 .sidenav .menu-item > a{color:#6a849d;font-size:16px!important;font-weight:100!important;line-height:48px!important;}
 body {
     font-family: "News Cycle";
-    background-color: #202C36;
+    background-color: #1e0223;
     height: 100%;
 }
 .wrapper{background-color:#f1f1f1;padding-top:5rem;}

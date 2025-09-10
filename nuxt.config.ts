@@ -29,9 +29,9 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   app: {
     head: {
-      title: 'Casimboo Casino - Premium Online & Mobile Slots Await',
+      title: "Queen's Bingo",
       meta: [
-        { name: 'description', content: "Enjoy seamless mobile gaming with Casimboo's mobile slots. Play popular titles like Thunderstruck 2 on the go and never miss a chance to win big!" }
+        { name: 'description', content: "Enjoy our bingo games and slots!" }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

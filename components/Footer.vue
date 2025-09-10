@@ -96,7 +96,7 @@
             <p v-html="text.Html"></p>
           </div>
           <div class="flex items-center justify-center">
-            <img src="../static/casimboo-logo.svg" alt="Casimboo Casino footer Logo"
+            <img src="../static/queens-bingo-logo.svg" alt="Queens Bingo footer Logo"
               class="bg-primary_bg w-56 p-5 shadow-md rounded-lg" height="" width="" loading="lazy" />
           </div>
         </div>

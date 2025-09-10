@@ -23,11 +23,11 @@ export const globalContent = ref({
 export const WHITELABEL_ID = 188;
 export const PP_API_URL = 'https://content.progressplay.net/api23/api/';
 const PP_PROMOTIONS_API = `${PP_API_URL}PromotionsInfo?whitelabelId=${WHITELABEL_ID}&country=`;
-const PP_LOBBY_LINK = 'https://casimboo.casino-pp.net/';
+const PP_LOBBY_LINK = 'https://www.queensbingo.com';
 //const KV_GAMES = `https://content.progressplay.net/api23/api/game?whitelabelId=${WHITELABEL_ID}`; // Test API
 
 // WP-REST-API:
-const WP_API = 'https://staging4.casimboo.com/wp-json/wp/v2/';
+const WP_API = 'https://headless.queensbingo.com/wp-json/wp/v2/';
 
 //CloudFlare Workers KV data:
 const KV_GAMES = 'https://access-ppgames.tech1960.workers.dev/';
@@ -192,7 +192,7 @@ async function fetchApiPromotions() {
 export async function fetchPromotions() {
   try {
     //console.log('Fetching Promotions...');
-    const response = await fetch('https://staging4.casimboo.com/wp-json/wp/v2/promotions/?_fields=content,yoast_head_json.description,yoast_head_json.og_title,acf&acf_format=standard');
+    const response = await fetch('https://headless.queensbingo.com/wp-json/wp/v2/promotions/?_fields=content,yoast_head_json.description,yoast_head_json.og_title,acf&acf_format=standard');
     console.log('Response received:', response);
     
     const data = await response.json();

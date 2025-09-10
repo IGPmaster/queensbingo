@@ -22,7 +22,7 @@
                 </div>
                 <div class="">
                   <NuxtLink class="flex justify-center" to="/">
-                    <img src="../static/casimboo-logo.svg" alt="Casimboo Casino header Logo" class="" width="150" height="45">
+                    <img src="../static/queens-bingo-logo.svg" alt="Queens Bingo header Logo" class="" width="150" height="45">
                   </NuxtLink>
                 </div>
 
