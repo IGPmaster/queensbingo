@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/_nuxt/*",
+    "/",
+    "/200",
+    "/404",
+    "/all-games",
+    "/blackjack-games",
+    "/casino-games",
+    "/compliance",
+    "/favicon.ico",
+    "/jackpot-games",
+    "/live-games",
+    "/newGameImg.jpg",
+    "/popular-games",
+    "/promotions",
+    "/roulette-games",
+    "/scratchcards",
+    "/slot-games",
+    "/compliance/aboutus",
+    "/compliance/contact",
+    "/compliance/cookies",
+    "/compliance/deposits",
+    "/compliance/faq",
+    "/compliance/payouts",
+    "/compliance/privacy",
+    "/compliance/responsible",
+    "/compliance/terms",
+    "/compliance/withdrawals"
+  ]
+}

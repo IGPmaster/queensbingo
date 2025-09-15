@@ -1,0 +1,707 @@
+From 784c58d9786b8335df45ecdefcd23596e0e34782 Mon Sep 17 00:00:00 2001
+From: IGPmaster <tech@igpholding.com>
+Date: Wed, 9 Apr 2025 17:26:52 +0200
+Subject: [PATCH] Fix: Affiliate Tracking and GTM Enhancements
+
+1. AFFILIATE TRACKING IMPROVEMENTS: Implemented URL-first approach (URL params now take priority over cookies), added localStorage backup, enhanced cookie security with SameSite=Strict and Secure flags, enabled affiliate tracking without explicit consent
+
+2. GTM FIXES: Fixed duplicate GTM script issue, removed unwanted GA4 script (G-MJZ2NWLG26), added MutationObserver to prevent dynamic script injections, ensured correct GTM ID usage
+
+3. DOCUMENTATION: Added implementation guide for other casino sites, testing script for validation, and implementation checklist. Changes match Jazzy Spins redesign and can be scaled to all sites.
+---
+ components/SeoKit.vue                         |   7 +
+ composables/useCookieConsent.js               |  85 +++++++---
+ documentation/affiliate-gtm-implementation.md |  73 ++++++++
+ documentation/affiliate-tracking-test.js      | 160 ++++++++++++++++++
+ documentation/implementation-checklist.md     |  59 +++++++
+ layouts/default.vue                           |   1 +
+ nuxt.config.ts                                |  12 ++
+ plugins/vue-gtm.client.js                     | 117 +++++++++++--
+ 8 files changed, 477 insertions(+), 37 deletions(-)
+ create mode 100644 components/SeoKit.vue
+ create mode 100644 documentation/affiliate-gtm-implementation.md
+ create mode 100644 documentation/affiliate-tracking-test.js
+ create mode 100644 documentation/implementation-checklist.md
+
+diff --git a/components/SeoKit.vue b/components/SeoKit.vue
+new file mode 100644
+index 0000000..04eaff1
+--- /dev/null
++++ b/components/SeoKit.vue
+@@ -0,0 +1,7 @@
++<template>
++  <!-- SeoKit component - Empty to prevent any unwanted analytics -->
++</template>
++
++<script setup>
++// No need for any scripts
++</script> 
+\ No newline at end of file
+diff --git a/composables/useCookieConsent.js b/composables/useCookieConsent.js
+index 3ed5df6..34e370c 100644
+--- a/composables/useCookieConsent.js
++++ b/composables/useCookieConsent.js
+@@ -86,7 +86,16 @@ export function useCookieConsent() {
+     const expiryDate = new Date();
+     expiryDate.setDate(expiryDate.getDate() + 30);
+     
++    // Enhanced cookie attributes for better security and standard compliance
+     document.cookie = `affiliateTracker=${tracker}; max-age=${30*24*60*60}; path=/; SameSite=Strict; Secure`;
++    
++    // Add tracker to localStorage as a backup
++    try {
++      localStorage.setItem('affiliateTracker', tracker);
++    } catch (e) {
++      console.warn('Failed to store affiliate tracker in localStorage:', e);
++    }
++    
+     updateLobbyLinks(tracker);
+   };
+ 
+@@ -174,8 +183,11 @@ export function useCookieConsent() {
+           'security_storage': 'granted'
+         });
+ 
+-        // Then initialize GTM if user has made a choice
+-        if (hasUserMadeChoice.value && window.initializeGTM) {
++        // Check if GTM has already been initialized (script exists)
++        const gtmScriptExists = document.querySelector('script[src*="googletagmanager.com/gtm.js"]');
++        
++        // Then initialize GTM if user has made a choice and GTM isn't already loaded
++        if (hasUserMadeChoice.value && window.initializeGTM && !gtmScriptExists) {
+           window.initializeGTM();
+         }
+ 
+@@ -233,12 +245,14 @@ export function useCookieConsent() {
+     }));
+ 
+     // Always handle affiliate tracking since it's necessary
++    // Prioritize URL parameters over existing cookies
+     const urlTracker = getTrackerFromURL();
+-    const trackerToUse = urlTracker || pendingTracker.value;
+-    if (trackerToUse) {
+-      setAffiliateTracking(trackerToUse);
++    if (urlTracker) {
++      setAffiliateTracking(urlTracker);
++    } else if (pendingTracker.value) {
++      setAffiliateTracking(pendingTracker.value);
+     } else {
+-      const existingTracker = getCookie('affiliateTracker');
++      const existingTracker = getCookie('affiliateTracker') || localStorage.getItem('affiliateTracker');
+       updateLobbyLinks(existingTracker);
+     }
+ 
+@@ -384,6 +398,17 @@ export function useCookieConsent() {
+   onMounted(() => {
+     const savedConsent = localStorage.getItem('cookieConsent');
+     
++    // Priority order for affiliate tracking:
++    // 1. URL parameters
++    // 2. Cookie
++    // 3. localStorage backup
++    const urlTracker = getTrackerFromURL();
++    const cookieTracker = getCookie('affiliateTracker');
++    const localStorageTracker = localStorage.getItem('affiliateTracker');
++    
++    // Use tracker based on priority
++    const trackerToUse = urlTracker || cookieTracker || localStorageTracker;
++    
+     if (savedConsent) {
+       try {
+         const { preferences: savedPreferences } = JSON.parse(savedConsent);
+@@ -394,15 +419,9 @@ export function useCookieConsent() {
+           affiliate: true
+         };
+         
+-        // Only handle affiliate tracking if consent exists and user has made a choice
+-        if (savedPreferences.affiliate && hasUserMadeChoice.value) {
+-          const urlTracker = getTrackerFromURL();
+-          if (urlTracker) {
+-            setAffiliateTracking(urlTracker);
+-          } else {
+-            const existingTracker = getCookie('affiliateTracker');
+-            updateLobbyLinks(existingTracker);
+-          }
++        // Always handle affiliate tracking regardless of consent status since it's necessary
++        if (trackerToUse) {
++          setAffiliateTracking(trackerToUse);
+         } else {
+           updateLobbyLinks(null);
+         }
+@@ -419,7 +438,13 @@ export function useCookieConsent() {
+           affiliate: true
+         };
+         showBanner.value = true;
+-        updateLobbyLinks(null);
++        
++        // Still use tracker even if consent parsing fails
++        if (trackerToUse) {
++          setAffiliateTracking(trackerToUse);
++        } else {
++          updateLobbyLinks(null);
++        }
+       }
+     } else {
+       // First visit - set default preferences to all enabled but don't apply them yet
+@@ -429,7 +454,14 @@ export function useCookieConsent() {
+         analytics: true,
+         affiliate: true
+       };
+-      updateLobbyLinks(null);
++      
++      // Always handle affiliate tracking regardless of consent banner state
++      if (trackerToUse) {
++        setAffiliateTracking(trackerToUse);
++      } else {
++        updateLobbyLinks(null);
++      }
++      
+       showBanner.value = true;
+     }
+   });
+@@ -442,15 +474,16 @@ export function useCookieConsent() {
+     saveToLocalStorage(newPrefs);
+     handleAnalytics(newPrefs.analytics);
+     
+-    if (newPrefs.affiliate) {
+-      const urlTracker = getTrackerFromURL();
+-      const trackerToUse = urlTracker || pendingTracker.value;
+-      if (trackerToUse) {
+-        setAffiliateTracking(trackerToUse);
+-      } else {
+-        const existingTracker = getCookie('affiliateTracker');
+-        updateLobbyLinks(existingTracker);
+-      }
++    // Always handle affiliate tracking since it's necessary now
++    const urlTracker = getTrackerFromURL();
++    const cookieTracker = getCookie('affiliateTracker');
++    const localStorageTracker = localStorage.getItem('affiliateTracker');
++    
++    // Use tracker based on priority
++    const trackerToUse = urlTracker || pendingTracker.value || cookieTracker || localStorageTracker;
++    
++    if (trackerToUse) {
++      setAffiliateTracking(trackerToUse);
+     } else {
+       updateLobbyLinks(null);
+     }
+diff --git a/documentation/affiliate-gtm-implementation.md b/documentation/affiliate-gtm-implementation.md
+new file mode 100644
+index 0000000..9b42aa6
+--- /dev/null
++++ b/documentation/affiliate-gtm-implementation.md
+@@ -0,0 +1,73 @@
++# Affiliate Tracking and GTM Enhancement Implementation
++
++## Overview
++This document outlines the implementation of affiliate tracking and GTM enhancements across multiple casino sites based on the successful redesign of Jazzy Spins. The implementation prioritizes URL parameters over cookies for affiliate tracking and ensures a standardized GTM implementation using SITE_CONFIG.
++
++## Changes Made to Casimboo
++
++### 1. Updated Affiliate Tracking Logic in `useCookieConsent.js`
++- **URL Parameters Prioritization**: Modified code to check URL parameters first, then cookies, and finally localStorage for affiliate tracker.
++- **Enhanced Cookie Attributes**: Added SameSite=Strict and Secure attributes to ensure better security.
++- **localStorage Backup**: Added a backup in localStorage for the affiliate tracker.
++- **Affiliate Tracking as Necessary**: Made affiliate tracking always enabled regardless of consent status.
++
++### 2. Standardized GTM Implementation
++- **SITE_CONFIG Integration**: Verified that GTM ID is correctly sourced from SITE_CONFIG in all relevant files.
++- **Enhanced DataLayer**: Added affiliate tracking parameters to the dataLayer for better tracking and attribution.
++- **Nuxt Configuration**: Added runtime configuration to ensure SITE_CONFIG is available.
++
++## Implementation Plan for Other Sites
++
++### Phase 1: Code Updates (Per Site)
++1. **Update `useCookieConsent.js`**:
++   - Implement URL parameter prioritization in `updateLobbyLinks()` function
++   - Enhance cookie attributes in `setAffiliateTracking()` function
++   - Update `onMounted()` to check URL parameters first
++   - Add localStorage backup for affiliate tracking
++
++2. **Standardize GTM Implementation**:
++   - Verify SITE_CONFIG.gtmId in `globalData.js` is correct for each site
++   - Ensure `nuxt.config.ts` correctly imports SITE_CONFIG
++   - Update `vue-gtm.client.js` to include affiliate parameters in dataLayer
++
++### Phase 2: Testing (Per Site)
++1. **Affiliate Tracking Testing**:
++   - Test using URL parameters with values like `?tracker=test123`
++   - Verify URL parameters override existing cookies
++   - Check cookie attributes are set correctly (Secure, SameSite=Strict)
++   - Verify localStorage backup works correctly
++   - Test affiliate tracking works on page load without consent
++
++2. **GTM Testing**:
++   - Validate GTM events fire correctly with affiliate parameters
++   - Use GTM Debug mode to verify dataLayer contains affiliate information
++   - Test full user journey from affiliate link to registration
++
++### Phase 3: Cross-browser Testing
++- Verify consistent behavior across Chrome, Firefox, Safari, and Edge
++- Test on both desktop and mobile devices
++
++## Site-Specific Configuration Values
++Update these values for each site:
++
++| Site Name | GTM ID | Notes |
++|-----------|--------|-------|
++| Casimboo  | GTM-NQV9C6X | Pilot site, implementation complete |
++| Site 2    | GTM-XXXXX | Replace with actual GTM ID |
++| ...       | ...    | ... |
++
++## Troubleshooting Common Issues
++- **Missing Affiliate Parameters**: Ensure all URL parameters (tracker, btag, affid) are correctly extracted and stored
++- **GTM Not Loading**: Check SITE_CONFIG.gtmId is correct for each site
++- **Tracking Not Persisting**: Verify cookie and localStorage backup functionality
++- **Consent Issues**: Remember affiliate tracking should work regardless of consent status
++
++## Implementation Checklist
++- [ ] Update useCookieConsent.js
++- [ ] Verify SITE_CONFIG.gtmId in globalData.js
++- [ ] Update vue-gtm.client.js with affiliate parameters
++- [ ] Add runtime configuration to nuxt.config.ts
++- [ ] Test affiliate tracking functionality
++- [ ] Test GTM implementation
++- [ ] Cross-browser testing
++- [ ] Document site-specific configurations 
+\ No newline at end of file
+diff --git a/documentation/affiliate-tracking-test.js b/documentation/affiliate-tracking-test.js
+new file mode 100644
+index 0000000..ac38d39
+--- /dev/null
++++ b/documentation/affiliate-tracking-test.js
+@@ -0,0 +1,160 @@
++/**
++ * Affiliate Tracking Test Script
++ * 
++ * This script helps test the affiliate tracking implementation.
++ * Copy/paste into browser console to run tests.
++ */
++
++(function() {
++  console.log('===== AFFILIATE TRACKING TEST =====');
++  
++  // Test 1: Check if URL parameters are correctly parsed
++  function testURLParameters() {
++    console.log('Test 1: URL Parameters');
++    const url = new URL(window.location.href);
++    const params = new URLSearchParams(url.search);
++    
++    console.log('Current URL parameters:');
++    console.log('- tracker:', params.get('tracker') || 'not set');
++    console.log('- btag:', params.get('btag') || 'not set');
++    console.log('- affid:', params.get('affid') || 'not set');
++    
++    if (!params.get('tracker')) {
++      console.log('No tracker parameter found. Add ?tracker=test123 to URL to test.');
++    }
++  }
++  
++  // Test 2: Check cookies
++  function testCookies() {
++    console.log('Test 2: Cookies');
++    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
++      const [name, value] = cookie.trim().split('=');
++      acc[name] = value;
++      return acc;
++    }, {});
++    
++    console.log('Affiliate Cookie:', cookies['affiliateTracker'] || 'not set');
++    
++    // Test cookie attributes (requires manual inspection)
++    console.log('Cookie attributes (check manually in Application tab):');
++    console.log('- Expected: HttpOnly=false, SameSite=Strict, Secure=true');
++  }
++  
++  // Test 3: Check localStorage
++  function testLocalStorage() {
++    console.log('Test 3: localStorage');
++    const trackerLS = localStorage.getItem('affiliateTracker');
++    console.log('Affiliate Tracker in localStorage:', trackerLS || 'not set');
++    
++    const consent = localStorage.getItem('cookieConsent');
++    console.log('Consent in localStorage:', consent ? 'set' : 'not set');
++    
++    if (consent) {
++      try {
++        const consentObj = JSON.parse(consent);
++        console.log('Affiliate consent:', consentObj.preferences.affiliate);
++      } catch (e) {
++        console.error('Error parsing consent:', e);
++      }
++    }
++  }
++  
++  // Test 4: Check dataLayer for GTM
++  function testDataLayer() {
++    console.log('Test 4: GTM dataLayer');
++    if (!window.dataLayer) {
++      console.error('dataLayer not found. GTM may not be initialized.');
++      return;
++    }
++    
++    const affiliateData = window.dataLayer.find(item => 
++      item.affiliate_tracker !== undefined || 
++      item.affiliate_btag !== undefined || 
++      item.affiliate_id !== undefined
++    );
++    
++    if (affiliateData) {
++      console.log('Affiliate data found in dataLayer:');
++      console.log('- affiliate_tracker:', affiliateData.affiliate_tracker || 'not set');
++      console.log('- affiliate_btag:', affiliateData.affiliate_btag || 'not set');
++      console.log('- affiliate_id:', affiliateData.affiliate_id || 'not set');
++    } else {
++      console.warn('No affiliate data found in dataLayer.');
++    }
++    
++    console.log('Total dataLayer events:', window.dataLayer.length);
++  }
++  
++  // Test 5: Check Lobby Links
++  function testLobbyLinks() {
++    console.log('Test 5: Lobby Links');
++    const regLinks = document.querySelectorAll('a[href*="registration"]');
++    const loginLinks = document.querySelectorAll('a[href*="login"]');
++    
++    console.log('Registration links found:', regLinks.length);
++    if (regLinks.length > 0) {
++      console.log('Sample registration link:', regLinks[0].href);
++      const regLinkParams = new URL(regLinks[0].href).search;
++      console.log('Parameters:', regLinkParams || 'none');
++    }
++    
++    console.log('Login links found:', loginLinks.length);
++    if (loginLinks.length > 0) {
++      console.log('Sample login link:', loginLinks[0].href);
++      const loginLinkParams = new URL(loginLinks[0].href).search;
++      console.log('Parameters:', loginLinkParams || 'none');
++    }
++  }
++  
++  // Run all tests
++  function runAllTests() {
++    testURLParameters();
++    console.log('-----------------------');
++    testCookies();
++    console.log('-----------------------');
++    testLocalStorage();
++    console.log('-----------------------');
++    testDataLayer();
++    console.log('-----------------------');
++    testLobbyLinks();
++  }
++  
++  // Test utilities
++  const testUtils = {
++    // Set a test tracker in URL without page reload
++    setTestTracker: function(tracker = 'test123') {
++      const url = new URL(window.location.href);
++      url.searchParams.set('tracker', tracker);
++      window.history.replaceState({}, '', url.toString());
++      console.log(`Set test tracker: ${tracker}`);
++      console.log('Reload page to apply changes and run tests again.');
++    },
++    
++    // Clear affiliate data
++    clearAffiliateData: function() {
++      // Clear cookies
++      document.cookie = 'affiliateTracker=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
++      // Clear localStorage
++      localStorage.removeItem('affiliateTracker');
++      // Clear URL parameters
++      const url = new URL(window.location.href);
++      url.searchParams.delete('tracker');
++      url.searchParams.delete('btag');
++      url.searchParams.delete('affid');
++      window.history.replaceState({}, '', url.toString());
++      
++      console.log('Cleared all affiliate data');
++      console.log('Reload page to apply changes and run tests again.');
++    }
++  };
++  
++  // Run all tests
++  runAllTests();
++  
++  // Expose test utilities to console
++  window.affiliateTests = testUtils;
++  console.log('===== TEST COMPLETE =====');
++  console.log('Additional test utilities available via window.affiliateTests:');
++  console.log('- affiliateTests.setTestTracker("yourtracker")');
++  console.log('- affiliateTests.clearAffiliateData()');
++})(); 
+\ No newline at end of file
+diff --git a/documentation/implementation-checklist.md b/documentation/implementation-checklist.md
+new file mode 100644
+index 0000000..af7cbdf
+--- /dev/null
++++ b/documentation/implementation-checklist.md
+@@ -0,0 +1,59 @@
++# Implementation Checklist for Casino Sites
++
++## Pre-Implementation
++- [ ] Clone the repository for the target site
++- [ ] Create a new feature branch: `git checkout -b feature/affiliate-gtm-enhancement`
++- [ ] Verify current file structure matches Casimboo (reference site)
++
++## Phase 1: Code Updates
++
++### Update `useCookieConsent.js`
++- [ ] Update `setAffiliateTracking()` function with enhanced cookie attributes and localStorage backup
++- [ ] Modify `updateLobbyLinks()` to prioritize URL parameters over cookies
++- [ ] Update `onMounted()` to check URL parameters first
++- [ ] Ensure tracker handling is uniform across all lifecycle methods
++- [ ] Update `watch` effect for preferences to maintain behavior consistency
++
++### Check GTM Configuration 
++- [ ] Verify the SITE_CONFIG.gtmId in `globalData.js` is correct for this site
++- [ ] Ensure `nuxt.config.ts` imports and uses SITE_CONFIG properly
++- [ ] Update `vue-gtm.client.js` to include affiliate parameters in the dataLayer
++- [ ] Add runtime configuration to `nuxt.config.ts` if needed
++
++## Phase 2: Testing
++
++### Affiliate Tracking Testing
++- [ ] Test with URL parameter `?tracker=test123`
++- [ ] Verify URL parameters override existing cookies
++- [ ] Check cookie attributes (SameSite=Strict, Secure)
++- [ ] Test localStorage backup by clearing cookies
++- [ ] Test tracking works without user consent
++
++### GTM Testing
++- [ ] Verify GTM loads correctly
++- [ ] Check dataLayer contains affiliate information
++- [ ] Test all affiliate parameters (`tracker`, `btag`, `affid`)
++- [ ] Validate full user journey (affiliate link → registration)
++
++## Phase 3: Cross-browser Testing
++- [ ] Test in Chrome
++- [ ] Test in Firefox
++- [ ] Test in Safari
++- [ ] Test in Edge
++- [ ] Test on mobile devices
++
++## Deployment
++- [ ] Create pull request for review
++- [ ] Address any review comments
++- [ ] Merge changes
++- [ ] Monitor post-deployment
++
++## Site-Specific Configuration
++
++### Current Site Information
++- Site Name: _________________
++- GTM ID: _________________
++- Special Requirements: _________________
++
++### Notes and Issues
++_Document any site-specific issues or configuration requirements here_ 
+\ No newline at end of file
+diff --git a/layouts/default.vue b/layouts/default.vue
+index 3b9062f..441e558 100644
+--- a/layouts/default.vue
++++ b/layouts/default.vue
+@@ -54,6 +54,7 @@ import { ref, onMounted, onUnmounted } from 'vue';
+ import { useAsyncData } from '#app';
+ import { msgTranslate, regLink, loginLink, loadLang } from '~/composables/globalData';
+ import CookieConsent from '~/components/CookieConsent.vue';
++import SeoKit from '~/components/SeoKit.vue';
+ 
+ const menuIsOpen = ref(false);
+ 
+diff --git a/nuxt.config.ts b/nuxt.config.ts
+index 2893919..67196a5 100644
+--- a/nuxt.config.ts
++++ b/nuxt.config.ts
+@@ -1,3 +1,6 @@
++// Import required Nuxt dependencies
++import { defineNuxtConfig } from 'nuxt/config'
++
+ export default defineNuxtConfig({
+   // Keep SSR true for Cloudflare Pages
+   ssr: true,
+@@ -27,6 +30,13 @@ export default defineNuxtConfig({
+     '~/plugins/vue-gtm.client.js',
+   ],
+   modules: ['@nuxtjs/tailwindcss'],
++  // Ensure runtime config options are available
++  runtimeConfig: {
++    public: {
++      // This will be available on both server and client
++      siteConfigImported: true
++    }
++  },
+   app: {
+     head: {
+       title: 'QueensBingo.com - New Online Bingo Site Buzzing With Fun!',
+@@ -47,6 +57,8 @@ export default defineNuxtConfig({
+           href: 'https://fonts.googleapis.com/icon?family=Material+Icons'
+         }
+       ],
++      // Prevent any direct script tags in the head
++      script: []
+     }
+   },
+ });
+\ No newline at end of file
+diff --git a/plugins/vue-gtm.client.js b/plugins/vue-gtm.client.js
+index 2816fa7..65d9f88 100644
+--- a/plugins/vue-gtm.client.js
++++ b/plugins/vue-gtm.client.js
+@@ -5,12 +5,87 @@ export default defineNuxtPlugin((nuxtApp) => {
+     if (typeof window === 'undefined') return;
+ 
+     try {
++        // Check if script tags with GTM are already in the document
++        const existingScripts = document.querySelectorAll('script[src*="googletagmanager.com"]');
++        if (existingScripts.length > 0) {
++            console.warn('GTM scripts already exist in document:', existingScripts.length);
++            
++            // Remove any script tags that don't match our configured GTM ID
++            existingScripts.forEach(script => {
++                const src = script.src;
++                if (!src.includes(SITE_CONFIG.gtmId)) {
++                    console.log('Removing non-matching GTM script:', src);
++                    script.parentNode.removeChild(script);
++                } else {
++                    console.log('Found correct GTM script:', src);
++                }
++            });
++            
++            // Check for duplicate scripts with the correct ID
++            const correctScripts = document.querySelectorAll(`script[src*="${SITE_CONFIG.gtmId}"]`);
++            if (correctScripts.length > 1) {
++                console.log(`Found ${correctScripts.length} duplicate GTM scripts with correct ID. Keeping only one.`);
++                // Keep only the first script with our GTM ID and remove the rest
++                for (let i = 1; i < correctScripts.length; i++) {
++                    correctScripts[i].parentNode.removeChild(correctScripts[i]);
++                }
++            }
++        }
++        
++        // Specifically remove the G-MJZ2NWLG26 script if it exists
++        function removeGA4Script() {
++            const ga4Script = document.querySelector('script[src*="G-MJZ2NWLG26"]');
++            if (ga4Script) {
++                console.log('Removing GA4 script (G-MJZ2NWLG26)');
++                ga4Script.parentNode.removeChild(ga4Script);
++            }
++            
++            // Also remove any gtag scripts
++            const gtagScripts = document.querySelectorAll('script[src*="gtag/js"]');
++            gtagScripts.forEach(script => {
++                console.log('Removing gtag script:', script.src);
++                script.parentNode.removeChild(script);
++            });
++        }
++        
++        // Call immediately and also set up a MutationObserver to watch for script additions
++        removeGA4Script();
++        
++        // Set up observer to remove scripts that might be added dynamically
++        const observer = new MutationObserver((mutations) => {
++            for (const mutation of mutations) {
++                if (mutation.type === 'childList' && mutation.addedNodes.length) {
++                    for (const node of mutation.addedNodes) {
++                        if (node.tagName === 'SCRIPT' && 
++                            (node.src.includes('G-MJZ2NWLG26') || node.src.includes('gtag/js'))) {
++                            console.log('Detected dynamic addition of GA4/gtag script, removing:', node.src);
++                            node.parentNode.removeChild(node);
++                        }
++                    }
++                }
++            }
++        });
++        
++        // Start observing the document with the configured parameters
++        observer.observe(document.documentElement, { childList: true, subtree: true });
++        
+         // Initialize dataLayer with default consent state
+         window.dataLayer = window.dataLayer || [];
++        
++        // Get affiliate tracking parameters 
++        const urlParams = new URLSearchParams(window.location.search);
++        const tracker = urlParams.get('tracker') || localStorage.getItem('affiliateTracker') || document.cookie.split(';').find(c => c.trim().startsWith('affiliateTracker='))?.split('=')[1] || '';
++        const btag = urlParams.get('btag') || '';
++        const affid = urlParams.get('affid') || '';
++        
+         window.dataLayer.push({
+             'gtm.start': new Date().getTime(),
+             'event': 'gtm.js',
+             'site_name': SITE_CONFIG.siteName,
++            // Add affiliate tracking information to dataLayer
++            'affiliate_tracker': tracker,
++            'affiliate_btag': btag,
++            'affiliate_id': affid,
+             // Default consent state - wait for user input
+             'analytics_storage': 'denied',
+             'ad_storage': 'denied',
+@@ -37,6 +112,12 @@ export default defineNuxtPlugin((nuxtApp) => {
+         // Function to initialize GTM
+         window.initializeGTM = () => {
+             try {
++                // Check if GTM script is already loaded
++                if (document.querySelector(`script[src*="${SITE_CONFIG.gtmId}"]`)) {
++                    console.log('GTM script already loaded');
++                    return;
++                }
++                
+                 // Load GTM script
+                 const script = document.createElement('script');
+                 script.async = true;
+@@ -45,10 +126,20 @@ export default defineNuxtPlugin((nuxtApp) => {
+                 // Add success handler
+                 script.onload = () => {
+                     console.log('GTM script loaded successfully');
+-                    // Push initial pageview after script loads
++                    
++                    // Get current affiliate tracking parameters
++                    const urlParams = new URLSearchParams(window.location.search);
++                    const tracker = urlParams.get('tracker') || localStorage.getItem('affiliateTracker') || document.cookie.split(';').find(c => c.trim().startsWith('affiliateTracker='))?.split('=')[1] || '';
++                    const btag = urlParams.get('btag') || '';
++                    const affid = urlParams.get('affid') || '';
++                    
++                    // Push initial pageview after script loads with affiliate data
+                     window.dataLayer.push({
+                         'event': 'pageview',
+-                        'page_path': window.location.pathname
++                        'page_path': window.location.pathname,
++                        'affiliate_tracker': tracker,
++                        'affiliate_btag': btag, 
++                        'affiliate_id': affid
+                     });
+                 };
+                 
+@@ -60,15 +151,19 @@ export default defineNuxtPlugin((nuxtApp) => {
+                 document.head.appendChild(script);
+ 
+                 // Add noscript iframe for better tracking coverage
+-                const noscript = document.createElement('noscript');
+-                const iframe = document.createElement('iframe');
+-                iframe.src = `https://www.googletagmanager.com/ns.html?id=${SITE_CONFIG.gtmId}`;
+-                iframe.height = '0';
+-                iframe.width = '0';
+-                iframe.style.display = 'none';
+-                iframe.style.visibility = 'hidden';
+-                noscript.appendChild(iframe);
+-                document.body.appendChild(noscript);
++                // First check if one already exists
++                const existingIframe = document.querySelector(`iframe[src*="${SITE_CONFIG.gtmId}"]`);
++                if (!existingIframe) {
++                    const noscript = document.createElement('noscript');
++                    const iframe = document.createElement('iframe');
++                    iframe.src = `https://www.googletagmanager.com/ns.html?id=${SITE_CONFIG.gtmId}`;
++                    iframe.height = '0';
++                    iframe.width = '0';
++                    iframe.style.display = 'none';
++                    iframe.style.visibility = 'hidden';
++                    noscript.appendChild(iframe);
++                    document.body.appendChild(noscript);
++                }
+             } catch (error) {
+                 console.warn('Error initializing GTM:', error);
+             }
+-- 
+2.39.5 (Apple Git-154)
+

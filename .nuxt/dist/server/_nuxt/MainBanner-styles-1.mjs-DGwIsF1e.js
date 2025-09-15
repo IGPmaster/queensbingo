@@ -1,0 +1,5 @@
+const MainBanner_vue_vue_type_style_index_0_scoped_64c6a3d1_lang = ".loading-placeholder[data-v-64c6a3d1]{min-height:119vw}@media (min-width:768px){.loading-placeholder[data-v-64c6a3d1]{min-height:100vw}}@media (min-width:992px){.loading-placeholder[data-v-64c6a3d1]{min-height:36vw}}@media (min-width:1920px){.loading-placeholder[data-v-64c6a3d1]{min-height:33vw}}@media (min-width:2400px){.loading-placeholder[data-v-64c6a3d1]{min-height:31vw}}.spinner[data-v-64c6a3d1]{animation:rotate-64c6a3d1 2s linear infinite;height:50px;left:50%;margin:-25px 0 0 -25px;position:absolute;top:25%;width:50px;z-index:2}.spinner .path[data-v-64c6a3d1]{stroke:#fff;stroke-linecap:round;animation:dash-64c6a3d1 1.5s ease-in-out infinite}@keyframes rotate-64c6a3d1{to{transform:rotate(1turn)}}@keyframes dash-64c6a3d1{0%{stroke-dasharray:1,150;stroke-dashoffset:0}50%{stroke-dasharray:90,150;stroke-dashoffset:-35}to{stroke-dasharray:90,150;stroke-dashoffset:-124}}.head-banner[data-v-64c6a3d1]{opacity:1;transition:opacity .5s ease-in}";
+export {
+  MainBanner_vue_vue_type_style_index_0_scoped_64c6a3d1_lang as default
+};
+//# sourceMappingURL=MainBanner-styles-1.mjs-DGwIsF1e.js.map

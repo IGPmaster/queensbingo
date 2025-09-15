@@ -1,0 +1,5 @@
+const SlotGames_vue_vue_type_style_index_0_scoped_7fa6892c_lang = ".loading-placeholder[data-v-7fa6892c]{min-height:119vw}@media (min-width:768px){.loading-placeholder[data-v-7fa6892c]{min-height:100vw}}@media (min-width:992px){.loading-placeholder[data-v-7fa6892c]{min-height:36vw}}@media (min-width:1920px){.loading-placeholder[data-v-7fa6892c]{min-height:33vw}}@media (min-width:2400px){.loading-placeholder[data-v-7fa6892c]{min-height:31vw}}.spinner[data-v-7fa6892c]{animation:rotate-7fa6892c 2s linear infinite;height:50px;left:50%;margin-top:100px!important;margin:-25px 0 0 -25px;position:absolute;width:50px;z-index:2}.spinner .path[data-v-7fa6892c]{stroke:#fff;stroke-linecap:round;animation:dash-7fa6892c 1.5s ease-in-out infinite}@keyframes rotate-7fa6892c{to{transform:rotate(1turn)}}@keyframes dash-7fa6892c{0%{stroke-dasharray:1,150;stroke-dashoffset:0}50%{stroke-dasharray:90,150;stroke-dashoffset:-35}to{stroke-dasharray:90,150;stroke-dashoffset:-124}}";
+export {
+  SlotGames_vue_vue_type_style_index_0_scoped_7fa6892c_lang as default
+};
+//# sourceMappingURL=SlotGames-styles-1.mjs-C5nPfzTF.js.map
