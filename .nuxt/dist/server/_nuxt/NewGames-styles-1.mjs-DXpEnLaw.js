@@ -1,5 +1,0 @@
-const NewGames_vue_vue_type_style_index_0_scoped_51d7d275_lang = ".spinner[data-v-51d7d275]{animation:rotate-51d7d275 2s linear infinite;height:50px;left:50%;margin-top:100px!important;margin:-25px 0 0 -25px;position:absolute;width:50px;z-index:2}.spinner .path[data-v-51d7d275]{stroke:#fff;stroke-linecap:round;animation:dash-51d7d275 1.5s ease-in-out infinite}@keyframes rotate-51d7d275{to{transform:rotate(1turn)}}@keyframes dash-51d7d275{0%{stroke-dasharray:1,150;stroke-dashoffset:0}50%{stroke-dasharray:90,150;stroke-dashoffset:-35}to{stroke-dasharray:90,150;stroke-dashoffset:-124}}.loading-placeholder[data-v-51d7d275]{min-height:110vh}@media (min-width:768px){.loading-placeholder[data-v-51d7d275]{min-height:50vw}}@media (min-width:992px){.loading-placeholder[data-v-51d7d275]{min-height:20vw}}@media (min-width:1920px){.loading-placeholder[data-v-51d7d275]{min-height:18vw}}@media (min-width:2400px){.loading-placeholder[data-v-51d7d275]{min-height:17vw}}";
-export {
-  NewGames_vue_vue_type_style_index_0_scoped_51d7d275_lang as default
-};
-//# sourceMappingURL=NewGames-styles-1.mjs-DXpEnLaw.js.map

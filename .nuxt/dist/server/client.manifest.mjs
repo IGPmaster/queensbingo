@@ -1,56 +1,56 @@
 export default {
-  "_BwKMNt6h.js": {
+  "_BfBXNQCX.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BwKMNt6h.js",
+    "file": "BfBXNQCX.js",
+    "name": "fetch",
+    "imports": [
+      "node_modules/nuxt/dist/app/entry.js",
+      "_C5AWDNW-.js"
+    ]
+  },
+  "_BpCcfO-Q.js": {
+    "resourceType": "script",
+    "module": true,
+    "prefetch": true,
+    "preload": true,
+    "file": "BpCcfO-Q.js",
     "name": "nuxt-link",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_C6QmI_ge.js": {
+  "_Btf3-wvf.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C6QmI_ge.js",
-    "name": "fetch",
-    "imports": [
-      "node_modules/nuxt/dist/app/entry.js",
-      "_CjIeMaTp.js"
-    ]
-  },
-  "_CSG2BEm3.js": {
-    "resourceType": "script",
-    "module": true,
-    "prefetch": true,
-    "preload": true,
-    "file": "CSG2BEm3.js",
-    "name": "useCookieConsent",
+    "file": "Btf3-wvf.js",
+    "name": "vue.8fc199ce",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_CjIeMaTp.js": {
+  "_C5AWDNW-.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CjIeMaTp.js",
+    "file": "C5AWDNW-.js",
     "name": "asyncData",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
-  "_yjjhvA2f.js": {
+  "_RR_-oY0k.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "yjjhvA2f.js",
-    "name": "vue.8fc199ce",
+    "file": "RR_-oY0k.js",
+    "name": "useCookieConsent",
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ]
@@ -60,16 +60,16 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BMjn917e.js",
+    "file": "45M504v1.js",
     "name": "default",
     "src": "layouts/default.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_BwKMNt6h.js",
+      "_BpCcfO-Q.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_CSG2BEm3.js",
-      "_C6QmI_ge.js",
-      "_CjIeMaTp.js"
+      "_RR_-oY0k.js",
+      "_BfBXNQCX.js",
+      "_C5AWDNW-.js"
     ],
     "css": [],
     "assets": [
@@ -93,14 +93,14 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DA0WVWEJ.js",
+    "file": "vQdgiS4t.js",
     "name": "error-404",
     "src": "node_modules/nuxt/dist/app/components/error-404.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_BwKMNt6h.js",
+      "_BpCcfO-Q.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_yjjhvA2f.js"
+      "_Btf3-wvf.js"
     ],
     "css": []
   },
@@ -115,13 +115,13 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Djt_ZPM7.js",
+    "file": "i30MxN-v.js",
     "name": "error-500",
     "src": "node_modules/nuxt/dist/app/components/error-500.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_yjjhvA2f.js"
+      "_Btf3-wvf.js"
     ],
     "css": []
   },
@@ -136,7 +136,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "8OYwj-MG.js",
+    "file": "Ch23RVho.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
@@ -152,7 +152,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BkE07e-E.js",
+    "file": "CxmHsdxx.js",
     "name": "all-games",
     "src": "pages/all-games.vue",
     "isDynamicEntry": true,
@@ -165,7 +165,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CO-aCuRH.js",
+    "file": "COCaBvuk.js",
     "name": "blackjack-games",
     "src": "pages/blackjack-games.vue",
     "isDynamicEntry": true,
@@ -178,7 +178,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "99BsHGkN.js",
+    "file": "CHGrI3ls.js",
     "name": "casino-games",
     "src": "pages/casino-games.vue",
     "isDynamicEntry": true,
@@ -191,14 +191,14 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Dq4_h3iq.js",
+    "file": "DwxJHwvN.js",
     "name": "_slug_",
     "src": "pages/compliance/[slug].vue",
     "isDynamicEntry": true,
     "imports": [
-      "_BwKMNt6h.js",
+      "_BpCcfO-Q.js",
       "node_modules/nuxt/dist/app/entry.js",
-      "_CjIeMaTp.js"
+      "_C5AWDNW-.js"
     ]
   },
   "pages/compliance/cookies.vue": {
@@ -206,13 +206,13 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DDFwQ0F3.js",
+    "file": "B-W8Y73Z.js",
     "name": "cookies",
     "src": "pages/compliance/cookies.vue",
     "isDynamicEntry": true,
     "imports": [
-      "_CSG2BEm3.js",
-      "_yjjhvA2f.js",
+      "_RR_-oY0k.js",
+      "_Btf3-wvf.js",
       "node_modules/nuxt/dist/app/entry.js"
     ]
   },
@@ -221,13 +221,13 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "CykzbnWo.js",
+    "file": "DiXmtlAt.js",
     "name": "index",
     "src": "pages/compliance/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_CjIeMaTp.js"
+      "_C5AWDNW-.js"
     ]
   },
   "pages/index.vue": {
@@ -235,18 +235,18 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BP-W3Kra.js",
+    "file": "BRK2aQUp.js",
     "name": "index",
     "src": "pages/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js",
-      "_BwKMNt6h.js",
-      "_CjIeMaTp.js",
-      "_C6QmI_ge.js"
+      "_BpCcfO-Q.js",
+      "_C5AWDNW-.js",
+      "_BfBXNQCX.js"
     ],
     "css": [
-      "index.DpsCiMOW.css"
+      "index.zvDvzRTf.css"
     ],
     "assets": [
       "bingo-room-1.CgjF3woD.webp",
@@ -257,8 +257,8 @@ export default {
       "bingo-room-6.C-Q1fnwA.webp"
     ]
   },
-  "index.DpsCiMOW.css": {
-    "file": "index.DpsCiMOW.css",
+  "index.zvDvzRTf.css": {
+    "file": "index.zvDvzRTf.css",
     "resourceType": "style",
     "prefetch": true,
     "preload": true
@@ -304,7 +304,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "XYaBnXUT.js",
+    "file": "DNOYaGy7.js",
     "name": "jackpot-games",
     "src": "pages/jackpot-games.vue",
     "isDynamicEntry": true,
@@ -317,7 +317,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BXH5xq1t.js",
+    "file": "YwP9cOqy.js",
     "name": "live-games",
     "src": "pages/live-games.vue",
     "isDynamicEntry": true,
@@ -330,7 +330,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "D9QPaB_1.js",
+    "file": "C4xN5tLT.js",
     "name": "popular-games",
     "src": "pages/popular-games.vue",
     "isDynamicEntry": true,
@@ -343,7 +343,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "yzFbWdAj.js",
+    "file": "njnDYPpd.js",
     "name": "index",
     "src": "pages/promotions/index.vue",
     "isDynamicEntry": true,
@@ -363,7 +363,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "sr8hFN0T.js",
+    "file": "ZLoPEbS4.js",
     "name": "roulette-games",
     "src": "pages/roulette-games.vue",
     "isDynamicEntry": true,
@@ -376,7 +376,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DC8DRuKj.js",
+    "file": "CGfQyiHa.js",
     "name": "scratchcards",
     "src": "pages/scratchcards.vue",
     "isDynamicEntry": true,
@@ -389,7 +389,7 @@ export default {
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "DXvHyDBa.js",
+    "file": "BjNHlbLG.js",
     "name": "slot-games",
     "src": "pages/slot-games.vue",
     "isDynamicEntry": true,

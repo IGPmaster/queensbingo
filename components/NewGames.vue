@@ -30,17 +30,17 @@
     </a>
 
     <!-- Row 2: merged cell across last 2 columns -->
-<div class="col-span-2 bg-primary_bg text-[#F2E8B9] rounded p-10 text-center">
-  <h2 class="gamesSectionHead py-4">Come and Taste from the Promotions Jar at Queen's Bingo!</h2>
+<div class="col-span-2 bg-primary_bg text-[#F2E8B9] rounded p-4 text-center">
+  <h2 class="gamesSectionHead py-2">Come and Taste from the Promotions Jar at Queen's Bingo!</h2>
 
   
-    <p class="text-lg mb-4">
+    <p class="text-lg mb-2">
       Enjoy exclusive Bingo Promotions and Free Bingo Rooms!
     </p>
-    <p class="text-lg mb-4">
+    <p class="text-lg mb-2">
       Sign up to receive our exclusive daily and weekly email offers!
     </p>
-    <p class="text-lg mb-4">
+    <p class="text-lg mb-2">
       Look out for Queen's Bingo Bonus Code promotions!
     </p>
 

@@ -348,11 +348,11 @@ async function updateLinks() {
   const tracker = getCookie('tracker');
   const langCookie = getCookie('lang');
   if (tracker){
-    regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&country=${langCookie}/#registration`;
-    loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&country=${langCookie}/#login`;
+    regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&/#registration`;
+    loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&/#login`;
   } else {
-    regLink.value = `${PP_LOBBY_LINK}?country=${langCookie}/#registration`;
-    loginLink.value = `${PP_LOBBY_LINK}?country=${langCookie}/#login`;
+    regLink.value = `${PP_LOBBY_LINK}#registration`;
+    loginLink.value = `${PP_LOBBY_LINK}#login`;
   }
 }
 

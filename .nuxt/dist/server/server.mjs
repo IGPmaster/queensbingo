@@ -557,7 +557,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-DFltk1S_.js")
+    component: () => import("./_nuxt/index-CpPYaZ29.js")
   },
   {
     name: "jackpot-games",
@@ -1013,13 +1013,13 @@ const KV_GAMES_PRIMARY = "/api/pp/games";
 const KV_GAMES_FALLBACK = "/api/worker/games";
 async function updateLinks() {
   const tracker2 = getCookie("tracker");
-  const langCookie = getCookie("lang");
+  getCookie("lang");
   if (tracker2) {
-    regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker2}&country=${langCookie}/#registration`;
-    loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker2}&country=${langCookie}/#login`;
+    regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker2}&/#registration`;
+    loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker2}&/#login`;
   } else {
-    regLink.value = `${PP_LOBBY_LINK}?country=${langCookie}/#registration`;
-    loginLink.value = `${PP_LOBBY_LINK}?country=${langCookie}/#login`;
+    regLink.value = `${PP_LOBBY_LINK}#registration`;
+    loginLink.value = `${PP_LOBBY_LINK}#login`;
   }
 }
 async function fetchGames() {
