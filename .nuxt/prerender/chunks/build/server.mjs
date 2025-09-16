@@ -573,7 +573,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import('./index-Xa7riluU.mjs')
+    component: () => import('./index-DFltk1S_.mjs')
   },
   {
     name: "jackpot-games",

@@ -19,6 +19,10 @@
 .login-btn {
     @apply text-white uppercase font-semibold border-none border-[#FFE4A8] bg-secondary leading-none py-2 px-10 rounded flex justify-center cursor-pointer;
 }
+.login-btn:hover, .reg-btn:hover {
+    background-color: #6D00E1;
+}
+
 .reg-btn {
     @apply text-white uppercase font-semibold border-none border-[#FFE4A8] bg-primary leading-none py-2 px-10 rounded flex justify-center cursor-pointer;
 }

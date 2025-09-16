@@ -4,9 +4,10 @@
 <p class="text-center">Play our sweet and sticky bingo games and spin our delicious slots! Check out the finger-licking specials waiting for you in our promotions jar.</p>
   </div>
   <div class="container mx-auto px-4 py-6">
-  <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Row 1: 4 images -->
     <a :href="regLink" target="_blank" rel="noopener">
-      <img src="/static/bingo/bingo-room-1.webp" alt="Image 1" class="w-full h-auto object-cover rounded transition-transform duration-300 hover:scale-105" />
+      <img src="/static/bingo/bingo-room-1.webp" alt="Image 1" class="w-full h-auto object-cover rounded" />
     </a>
     <a :href="regLink" target="_blank" rel="noopener">
       <img src="/static/bingo/bingo-room-2.webp" alt="Image 2" class="w-full h-auto object-cover rounded" />
@@ -17,11 +18,40 @@
     <a :href="regLink" target="_blank" rel="noopener">
       <img src="/static/bingo/bingo-room-4.webp" alt="Image 4" class="w-full h-auto object-cover rounded" />
     </a>
+
+    <!-- Row 2: image 5 -->
     <a :href="regLink" target="_blank" rel="noopener">
       <img src="/static/bingo/bingo-room-5.webp" alt="Image 5" class="w-full h-auto object-cover rounded" />
     </a>
-    <img src="/static/bingo/bingo-room-6.webp" alt="Image 6" class="w-full h-auto object-cover rounded" />
+
+    <!-- Row 2: image 6 -->
+    <a :href="regLink" target="_blank" rel="noopener">
+      <img src="/static/bingo/bingo-room-6.webp" alt="Image 6" class="w-full h-auto object-cover rounded" />
+    </a>
+
+    <!-- Row 2: merged cell across last 2 columns -->
+<div class="col-span-2 bg-primary_bg text-[#F2E8B9] rounded p-10 text-center">
+  <h2 class="gamesSectionHead py-4">Come and Taste from the Promotions Jar at Queen's Bingo!</h2>
+
+  
+    <p class="text-lg mb-4">
+      Enjoy exclusive Bingo Promotions and Free Bingo Rooms!
+    </p>
+    <p class="text-lg mb-4">
+      Sign up to receive our exclusive daily and weekly email offers!
+    </p>
+    <p class="text-lg mb-4">
+      Look out for Queen's Bingo Bonus Code promotions!
+    </p>
+
+
+    <div class="flex justify-center py-4">
+      <a :href="regLink" class="reg-btn text-lg md:text-xl">
+        {{ msgTranslate?.sign_up || 'Sign Up' }}
+      </a>
+    </div>
   </div>
+</div>
 </div>
 <div class="section-odd py-10 lg:py-10">
     <div class="row bgr_red lg:mb-4">
