@@ -1331,7 +1331,7 @@ const plugins = [
   prerender_server_LXx1wM9sKF
 ];
 const layouts = {
-  default: () => import('./default-tD-SubRA.mjs')
+  default: () => import('./default-Ba2yNPqg.mjs')
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",

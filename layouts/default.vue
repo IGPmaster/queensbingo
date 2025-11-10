@@ -8,7 +8,8 @@
                         <img src="../assets/hamburgerMenu.svg" alt="Mobile Menu Button" class="w-9 h-9 pl-4 items-center">
                           <div class="menu bg-secondary_bg rounded text-left w-36 drop-shadow-[0_15px_15px_rgba(0,0,0,0.50)] transition duration-300 ease-in-out transform scale-0 origin-top" id="menu">
                             <NuxtLink to="/" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.home || 'Home' }}</NuxtLink>
-                            <NuxtLink to="/promotions" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.promotions || 'Promotions' }}</NuxtLink>
+                            <!-- <NuxtLink to="/promotions" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.promotions || 'Promotions' }}</NuxtLink> -->
+                             <a href="https://www.queensbingo.com/promotions" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.promotions || 'Promotions' }}</a>
                             <NuxtLink to="/compliance" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.legal || 'Legal' }}</NuxtLink>
                             <NuxtLink to="/all-games" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.all_games || 'All Games' }}</NuxtLink>
                             <NuxtLink to="/popular-games" class="menu-item hover:bg-slate-800 px-5">{{ msgTranslate?.popular_games || 'Popular Games' }}</NuxtLink>

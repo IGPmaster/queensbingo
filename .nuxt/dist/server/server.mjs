@@ -1318,7 +1318,7 @@ const plugins = [
   prerender_server_LXx1wM9sKF
 ];
 const layouts = {
-  default: () => import("./_nuxt/default-tD-SubRA.js")
+  default: () => import("./_nuxt/default-Ba2yNPqg.js")
 };
 const LayoutLoader = defineComponent({
   name: "LayoutLoader",
