@@ -341,8 +341,8 @@ async function fetchFilterByName() {
 }
 
 // SILVER BULLET VPN FIX: Local CloudFlare Functions for games
-const KV_GAMES_PRIMARY = '/api/pp/games';
-const KV_GAMES_FALLBACK = '/api/worker/games';
+const KV_GAMES_PRIMARY = process.client ? '/api/pp/games' : 'https://content.progressplay.net/api23/api/game?whitelabelId=188';
+const KV_GAMES_FALLBACK = process.client ? '/api/worker/games' : 'https://access-ppgames.tech1960.workers.dev/';
 
 async function updateLinks() {
   const tracker = getCookie('tracker');

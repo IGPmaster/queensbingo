@@ -16,11 +16,11 @@
 		</div>
 		<div class="px-4 sm:px-6 md:px-0">
 			<div class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-				<div v-for="game in rouletteGames" :key="game.id" :class="'item ' + game.id">
+				<div v-for="game in visibleGames" :key="game.id" :class="'item ' + game.id">
 					<div class="">
 						<div class="show show-first first-content-border">
 							<a :href="regLink" target="_blank">
-								<img class="responsive-img item-qqq min-w-full" :src="game.image" @error="game.image = 'newGameImg.jpg'" 
+								<img class="responsive-img item-qqq min-w-full" :src="game.image" @error="onImageError(game)"
 									:alt="'Image of ' + game.gameName + ' online slot. ' + game.description"
 									:title="game.gameName + ' - ' + game.id" />
 							</a>
@@ -42,8 +42,16 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { rouletteGames, regLink, msgTranslate, loadLang, fetchGames } from '~/composables/globalData';
+
+const failedImages = ref(new Set());
+function onImageError(game) {
+  failedImages.value = new Set([...failedImages.value, game.id]);
+}
+const visibleGames = computed(() =>
+  rouletteGames.value.filter(g => !failedImages.value.has(g.id))
+);
 
 onMounted(async () => {
 	try {

@@ -22,11 +22,11 @@
 		</div>
 		<div v-else class="px-4 sm:px-6 md:px-0">
 			<div class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-				<div v-for="game in jackpotGames.slice(-12).reverse()" :key="game.id" :class="'item ' + game.id">
+				<div v-for="game in displayedGames" :key="game.id" :class="'item ' + game.id">
 					<div class="">
 						<div class="show show-first first-content-border">
 							<a :href="regLink" target="_blank">
-								<img class="responsive-img item-qqq min-w-full" :src="game.image" @error="game.image = 'newGameImg.jpg'" 
+								<img class="responsive-img item-qqq min-w-full" :src="game.image" @error="onImageError(game)"
 									:alt="'Image of ' + game.gameName + ' online slot. ' + game.description"
 									:title="game.gameName + ' - ' + game.id" />
 							</a>
@@ -48,10 +48,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, computed, onMounted, defineEmits } from 'vue';
 import { jackpotGames, msgTranslate, regLink, loginLink, loadLang } from '~/composables/globalData';
 
 const loading = ref(true);
+
+const failedImages = ref(new Set());
+function onImageError(game) {
+  failedImages.value = new Set([...failedImages.value, game.id]);
+}
+const displayedGames = computed(() =>
+  [...jackpotGames.value].reverse().filter(g => !failedImages.value.has(g.id)).slice(0, 12)
+);
 
 // Define emit
 const emit = defineEmits(['loaded']);

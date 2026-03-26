@@ -17,12 +17,13 @@
         <div class="px-4 sm:px-6 md:px-0">
             <div class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 <!-- <div v-for="game in games.slice(-12).reverse()" :key="game.id" :class="'item ' + game.id"> -->
-                <div v-for="game in games.filter(game => game.gameFilters?.includes('New')).slice(-12).reverse()"
+                <div v-for="game in displayedNewGames"
                     :key="game.id" :class="'item ' + game.id">
                     <div class="">
                         <div class="show show-first first-content-border">
                             <a :href="regLink" target="_blank">
                                 <img class="responsive-img item-qqq min-w-full" :src="game.image"
+                                    @error="onNewImageError(game)"
                                     :alt="'Image of ' + game.gameName + ' online slot. ' + game.description"
                                     :title="game.gameName + ' - ' + game.id" />
                             </a>
@@ -60,12 +61,13 @@
             <div class="px-4 sm:px-6 md:px-0">
                 <div class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     <!-- <div v-for="game in games.slice(-12).reverse()" :key="game.id" :class="'item ' + game.id"> -->
-                    <div v-for="game in games.filter(game => game.gameFilters?.includes('Featured')).slice(-12)"
+                    <div v-for="game in displayedPopularGames"
                         :key="game.id" :class="'item ' + game.id">
                         <div class="">
                             <div class="show show-first first-content-border">
                                 <a :href="regLink" target="_blank">
                                     <img class="responsive-img item-qqq" :src="game.image"
+                                        @error="onPopularImageError(game)"
                                         :alt="'Image of ' + game.gameName + ' online slot. ' + game.description"
                                         :title="game.gameName + ' - ' + game.id" />
                                 </a>
@@ -87,7 +89,26 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
+
 const { data: games } = await useFetch('https://content.progressplay.net/api23/api/game?whitelabelId=188')
+
+const failedNewImages = ref(new Set());
+const failedPopularImages = ref(new Set());
+
+function onNewImageError(game) {
+  failedNewImages.value = new Set([...failedNewImages.value, game.id]);
+}
+function onPopularImageError(game) {
+  failedPopularImages.value = new Set([...failedPopularImages.value, game.id]);
+}
+
+const displayedNewGames = computed(() =>
+  (games.value || []).filter(g => g.gameFilters?.includes('New')).slice(-12).reverse().filter(g => !failedNewImages.value.has(g.id))
+);
+const displayedPopularGames = computed(() =>
+  (games.value || []).filter(g => g.gameFilters?.includes('Featured')).slice(-12).filter(g => !failedPopularImages.value.has(g.id))
+);
 async function fetchFilterByName() {
     try {
         const response = await fetch(FILTERED_BY_NAME_KV);
