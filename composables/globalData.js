@@ -87,18 +87,23 @@ const country = ref('');
 const countryNotSupported = ref(false);
 const countriesData = ref([]);
 
-export async function handleTracker() {
-  const params = new URLSearchParams(window.location.search);
-  const trackerFromURL = params.get('tracker');
-  const trackerFromCookie = getCookie('tracker');
+export async function handleParameter(parameterName) {
+  // Skip during server-side rendering
+  if (typeof window === 'undefined') {
+    return '';
+  }
 
-  if (trackerFromURL) {
-    setCookie('tracker', trackerFromURL, 30, 'None', true);
-    return trackerFromURL;
-  } else if (trackerFromCookie) {
-    return trackerFromCookie;
+  const params = new URLSearchParams(window.location.search);
+  const parameterFromURL = params.get(parameterName);
+  const parameterFromCookie = getCookie(parameterName);
+
+  if (parameterFromURL) {
+    setCookie(parameterName, parameterFromURL, 30, 'None', true);
+    return parameterFromURL;
+  } else if (parameterFromCookie) {
+    return parameterFromCookie;
   } else {
-    return 'untracked-user';
+    return '';
   }
 }
 
@@ -345,15 +350,19 @@ const KV_GAMES_PRIMARY = process.client ? '/api/pp/games' : 'https://content.pro
 const KV_GAMES_FALLBACK = process.client ? '/api/worker/games' : 'https://access-ppgames.tech1960.workers.dev/';
 
 async function updateLinks() {
-  const tracker = getCookie('tracker');
-  const langCookie = getCookie('lang');
-  if (tracker){
-    regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&nav=registration`;
-    loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&nav=login`;
-  } else {
-    regLink.value = `${PP_LOBBY_LINK}?nav=registration`;
-    loginLink.value = `${PP_LOBBY_LINK}?nav=login`;
-  }
+  const tracker = await handleParameter('tracker');
+  const btag = await handleParameter('btag');
+  const affid = await handleParameter('affid');
+
+  const queryStringParams = [
+    tracker ? `tracker=${tracker}` : '',
+    btag ? `btag=${btag}` : '',
+    affid ? `affid=${affid}` : '',
+  ].filter(param => param !== '').join('&');
+
+  const base = `${PP_LOBBY_LINK}${queryStringParams ? '?' + queryStringParams + '&' : '?'}`;
+  regLink.value = `${base}nav=registration`;
+  loginLink.value = `${base}nav=login`;
 }
 
 async function fetchGames() {
