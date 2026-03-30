@@ -88,8 +88,8 @@
   // Test 5: Check Lobby Links
   function testLobbyLinks() {
     console.log('Test 5: Lobby Links');
-    const regLinks = document.querySelectorAll('a[href*="registration"]');
-    const loginLinks = document.querySelectorAll('a[href*="login"]');
+    const regLinks = document.querySelectorAll('a[href*="nav=registration"]');
+    const loginLinks = document.querySelectorAll('a[href*="nav=login"]');
     
     console.log('Registration links found:', regLinks.length);
     if (regLinks.length > 0) {
