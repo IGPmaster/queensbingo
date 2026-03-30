@@ -29,7 +29,7 @@ export const globalContent = ref({
 export const WHITELABEL_ID = 188;
 export const PP_API_URL = 'https://content.progressplay.net/api23/api/';
 const PP_PROMOTIONS_API = `${PP_API_URL}PromotionsInfo?whitelabelId=${WHITELABEL_ID}&country=`;
-export const PP_LOBBY_LINK = 'https://www.queensbingo.com';
+export const PP_LOBBY_LINK = 'https://play.queensbingo.com';
 //const KV_GAMES = `https://content.progressplay.net/api23/api/game?whitelabelId=${WHITELABEL_ID}`; // Test API
 
 // WP-REST-API:
