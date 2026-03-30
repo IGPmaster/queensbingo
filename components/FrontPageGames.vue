@@ -153,8 +153,8 @@ async function fetchGames() {
         //     if (process.client) {
         //     tracker = getCookie('tracker') || 'untrackedUser';
         // }
-        regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&country=${lang.value}/#registration`;
-        loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&country=${lang.value}/#login`;
+        regLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&country=${lang.value}&nav=registration`;
+        loginLink.value = `${PP_LOBBY_LINK}?tracker=${tracker}&country=${lang.value}&nav=login`;
     } catch (error) {
         console.error('Error fetching games:', error);
     }
