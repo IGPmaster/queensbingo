@@ -18,6 +18,7 @@ export default defineNuxtConfig({
   },
   // Route rules for CloudFlare Functions and ISR
   routeRules: {
+    '/promotions': { redirect: { to: 'https://play.queensbingo.com/promotions', statusCode: 301 } },
     '/api/**': { prerender: false }, // CloudFlare Functions should not be prerendered
     '/**': { isr: true } // Use ISR for all other routes
   },
