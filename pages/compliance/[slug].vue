@@ -21,6 +21,10 @@ import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 import { msgTranslate, globalContent, loadTranslations, loadLang, fetchCachedContent, lang, PP_API_URL, WHITELABEL_ID } from '~/composables/globalData';
 import { useAsyncData } from '#app';
+import { useHead } from '#imports';
+
+// ProgressPlay boilerplate loaded client-side and shared across every PP brand: keep out of the index.
+useHead({ meta: [{ name: 'robots', content: 'noindex, follow' }] });
 
 const route = useRoute();
 const slug = route.params.slug;
