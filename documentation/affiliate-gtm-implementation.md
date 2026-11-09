@@ -5,7 +5,7 @@ This document outlines the implementation of affiliate tracking and GTM enhancem
 
 ## Site Configuration
 - **Site Name**: Queens Bingo
-- **GTM ID**: GTM-WZ28D5Z2
+- **GTM ID**: GTM-NQV9C6X
 - **Base URL**: https://play.queensbingo.com
 - **Whitelabel ID**: 188
 
@@ -56,6 +56,6 @@ Builds links with tracker and country params using `?nav=` format.
 
 ## Troubleshooting
 - **Missing Affiliate Parameters**: Check `handleParameter()` is being called for all three params
-- **GTM Not Loading**: Check SITE_CONFIG.gtmId matches GTM-WZ28D5Z2
+- **GTM Not Loading**: Check SITE_CONFIG.gtmId matches GTM-NQV9C6X
 - **Tracking Not Persisting**: Verify cookie attributes (SameSite=None, Secure) work in current browser
 - **SSR Errors**: Ensure `handleParameter()` SSR guard is in place 

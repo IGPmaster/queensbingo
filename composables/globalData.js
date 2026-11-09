@@ -3,7 +3,7 @@ import { ref } from 'vue';
 // Site-specific configuration
 export const SITE_CONFIG = {
     siteName: 'QueensBingo',
-    gtmId: 'GTM-WZ28D5Z2',
+    gtmId: 'GTM-NQV9C6X',
 };
 
 export const lang = ref('');

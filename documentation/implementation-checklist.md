@@ -26,7 +26,7 @@
 - [x] Added `.nuxt` and `.output` to `.gitignore`
 
 ### GTM Configuration
-- [x] SITE_CONFIG.gtmId set to `GTM-WZ28D5Z2` in `globalData.js`
+- [x] SITE_CONFIG.gtmId set to `GTM-NQV9C6X` in `globalData.js`
 - [x] `nuxt.config.ts` configured with runtime config
 
 ## Testing
@@ -51,7 +51,7 @@
 
 ## Site Configuration
 - **Site Name**: Queens Bingo
-- **GTM ID**: GTM-WZ28D5Z2
+- **GTM ID**: GTM-NQV9C6X
 - **Base URL**: https://play.queensbingo.com
 - **Whitelabel ID**: 188
 - **Hosting**: Cloudflare Pages 
